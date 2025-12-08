@@ -1,5 +1,5 @@
 # IMDB Redesign
-Dette prosjektet går ut på å redesigne IMDB nettsiden ved å bruke min egen stil og farger. Jeg skal hente inn filminformasjon for nettsiden min fra OMDb API.
+Dette prosjektet går ut på å redesigne IMDB nettsiden ved å bruke min egen stil og farger. Jeg skal hente inn filminformasjon for nettsiden min fra TMDb API.
 Målet er å lage en enklere, mer visuelt fokusert filmplattform hvor brukeren kan:
 - Søke etter filmer og serier
 - Se detaljer som poster, plot, skuespillere, rating og sjanger
@@ -9,7 +9,7 @@ Målet er å lage en enklere, mer visuelt fokusert filmplattform hvor brukeren k
 Den første prototypen skal inneholde:
 
 - Et søkefelt hvor man kan søke etter en film
-- API-kall som henter filmdata fra OMDb API
+- API-kall som henter filmdata fra TMDb API
 - Vise resultat i et filmkort med:
   - Tittel
   - Poster
@@ -48,7 +48,7 @@ Utviklingsverktøy
 
 API 
 
-- OMDb API – brukes for å hente filmtittel, skuespillere, poster, plot, år, sjanger og rating.
+- TMDb API – brukes for å hente filmtittel, skuespillere, poster, plot, år, sjanger og rating.
 
 # Hvordan prosjektet viser kompentase i fagene
 
