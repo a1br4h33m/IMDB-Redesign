@@ -83,20 +83,20 @@ Felles kompetanseområder
 
 # Brukerveiledning
 
-For å bruke nettsiden ....
-Passord
-LAG EN .ENV FIL OG KOPIER ALT NEDE
+- For å bruke nettsiden ....
 
-  host= localhost
-  user= my_user
-  password= password
-  database= imdb_redesign
+- LAG EN .ENV FIL OG KOPIER ALT NEDE
+
+  - host= localhost
+  - user= my_user
+  - password= password
+  - database= imdb_redesign
 
 Last ned alle disse pakkene
 
-pip install flask
-pip install flask-cors
-pip install mysql-connector-python
-pip install bcrypt
-pip install pyjwt
-pip install python-dotenv
+- pip install flask
+- pip install flask-cors
+- pip install mysql-connector-python
+- pip install bcrypt
+- pip install pyjwt
+- pip install python-dotenv
