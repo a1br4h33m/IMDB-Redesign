@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMDB Redesign - Discover Movies & TV Shows</title>
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">IMDb</div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search movies, TV shows, actors...">
+            </div>
+            <ul class="nav-links">
+                <li><a onclick="showSection('trending')">Movies</a></li>
+                <li><a onclick="showSection('toprated')">Top Rated</a></li>
+                <li><a onclick="showSection('upcoming')">Upcoming</a></li>
+            </ul>
+            <div class="auth-section">
+                <button id="authButton" class="auth-btn" onclick="openAuthModal('login')">Sign In</button>
+                <div id="userMenu" class="user-menu" style="display: none;">
+                    <div class="user-avatar" onclick="toggleUserDropdown()">
+                        <span id="userInitials">U</span>
+                    </div>
+                    <div id="userDropdown" class="user-dropdown">
+                        <div class="user-info">
+                            <p id="userName" class="user-name">User Name</p>
+                            <p id="userEmail" class="user-email">user@email.com</p>
+                            <p id="emailVerifiedBadge" style="margin-top: 0.5rem;"></p>
+                        </div>
+                        <hr>
+                        <a href="#" onclick="openFavoritesModal()" class="dropdown-item">
+                            <span>❤️</span> My Favorites
+                        </a>
+                        <a href="#" onclick="open2FASettings()" class="dropdown-item">
+                            <span>🔐</span> Two-Factor Auth
+                        </a>
+                        <!-- Admin Dashboard Link - Only shows for admin users -->
+                        <a href="#" id="adminDashboardLink" onclick="openAdminDashboard()" class="dropdown-item" style="display: none;">
+                            <span>👨‍💼</span> Admin Dashboard
+                        </a>
+                        <hr id="adminDivider" style="display: none;">
+                        <a href="#" onclick="logout()" class="dropdown-item">
+                            <span>🚪</span> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Authentication Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAuthModal()">&times;</span>
+            
+            <!-- Login Form -->
+            <div id="loginForm" class="auth-form">
+                <h2>Welcome Back</h2>
+                <p class="auth-subtitle">Sign in to continue to IMDb</p>
+                
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email">
+                </div>
+                
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password">
+                </div>
+                
+                <div class="input-group" id="twoFAField" style="display: none;">
+                    <label>Two-Factor Code</label>
+                    <input type="text" id="login2FACode" placeholder="Enter 6-digit code" maxlength="6">
+                </div>
+                
+                <div class="remember-forgot">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-link">Forgot password?</a>
+                </div>
+                
+                <button class="auth-submit-btn" onclick="handleLogin()">Sign In</button>
+                
+                <div class="auth-divider">
+                    <span>OR</span>
+                </div>
+                
+                <button class="social-btn google-btn">
+                    <span>Continue with Google</span>
+                </button>
+                
+                <p class="auth-switch">
+                    Don't have an account? 
+                    <a href="#" onclick="switchToSignup()">Sign Up</a>
+                </p>
+            </div>
+            
+            <!-- Signup Form -->
+            <div id="signupForm" class="auth-form" style="display: none;">
+                <h2>Create Account</h2>
+                <p class="auth-subtitle">Join IMDb to track your favorite movies</p>
+                
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" id="signupName" placeholder="Enter your full name">
+                </div>
+                
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="signupEmail" placeholder="Enter your email">
+                </div>
+                
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="signupPassword" placeholder="Create a password">
+                </div>
+                
+                <div class="input-group">
+                    <label>Confirm Password</label>
+                    <input type="password" id="signupConfirmPassword" placeholder="Confirm your password">
+                </div>
+                
+                <label class="checkbox-label terms-label">
+                    <input type="checkbox" id="agreeTerms">
+                    <span>I agree to the Terms of Service and Privacy Policy</span>
+                </label>
+                
+                <button class="auth-submit-btn" onclick="handleSignup()">Create Account</button>
+                
+                <div class="auth-divider">
+                    <span>OR</span>
+                </div>
+                
+                <button class="social-btn google-btn">
+                    <span>Sign up with Google</span>
+                </button>
+                
+                <p class="auth-switch">
+                    Already have an account? 
+                    <a href="#" onclick="switchToLogin()">Sign In</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2FA Setup Modal -->
+    <div id="twoFAModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="close2FAModal()">&times;</span>
+            
+            <div class="auth-form">
+                <h2>🔐 Two-Factor Authentication</h2>
+                <p class="auth-subtitle" id="twoFASubtitle">Secure your account with 2FA</p>
+                
+                <div id="twoFAStatus" style="margin-bottom: 1.5rem;">
+                    <p id="twoFAStatusText" style="color: rgba(255,255,255,0.7);"></p>
+                </div>
+                
+                <!-- Setup 2FA -->
+                <div id="setup2FASection" style="display: none;">
+                    <p style="margin-bottom: 1rem; color: rgba(255,255,255,0.8);">
+                        1. Install Google Authenticator or any TOTP app
+                    </p>
+                    <p style="margin-bottom: 1rem; color: rgba(255,255,255,0.8);">
+                        2. Scan this QR code:
+                    </p>
+                    <div style="text-align: center; margin: 1.5rem 0;">
+                        <img id="qrCode" src="" alt="QR Code" style="max-width: 200px; border-radius: 12px;">
+                    </div>
+                    <p style="margin-bottom: 1rem; color: rgba(255,255,255,0.6); font-size: 0.85rem;">
+                        Or enter this key manually: <br>
+                        <code id="manualKey" style="background: rgba(255,255,255,0.1); padding: 0.5rem; display: block; margin-top: 0.5rem; border-radius: 8px;"></code>
+                    </p>
+                    <p style="margin-bottom: 1rem; color: rgba(255,255,255,0.8);">
+                        3. Enter the 6-digit code to verify:
+                    </p>
+                    <div class="input-group">
+                        <input type="text" id="verify2FACode" placeholder="Enter 6-digit code" maxlength="6" style="text-align: center; font-size: 1.5rem; letter-spacing: 0.3rem;">
+                    </div>
+                    <button class="auth-submit-btn" onclick="verify2FA()">Enable 2FA</button>
+                </div>
+                
+                <!-- Disable 2FA -->
+                <div id="disable2FASection" style="display: none;">
+                    <p style="margin-bottom: 1rem; color: rgba(255,255,255,0.8);">
+                        Enter your current 2FA code to disable:
+                    </p>
+                    <div class="input-group">
+                        <input type="text" id="disable2FACode" placeholder="Enter 6-digit code" maxlength="6" style="text-align: center; font-size: 1.5rem; letter-spacing: 0.3rem;">
+                    </div>
+                    <button class="auth-submit-btn" onclick="disable2FA()" style="background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);">Disable 2FA</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Movie Details Modal -->
+    <div id="movieModal" class="modal">
+        <div class="modal-content movie-details-modal">
+            <span class="close" onclick="closeMovieModal()">&times;</span>
+            <div id="movieDetailsContent" class="movie-details-content">
+                <div class="loading">Loading movie details...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Favorites Modal -->
+    <div id="favoritesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeFavoritesModal()">&times;</span>
+            <div class="auth-form">
+                <h2>❤️ My Favorites</h2>
+                <p class="auth-subtitle">Your favorite movies</p>
+                <div id="favoritesContent" class="favorites-grid">
+                    <div class="loading">Loading favorites...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Discover Your Next <span class="highlight">Favorite Film</span></h1>
+                <p>Explore millions of movies, TV shows, and entertainment content. Find ratings, reviews, and where to watch.</p>
+                <button class="cta-button" onclick="showSection('trending')">Browse Trending Now</button>
+            </div>
+            <div class="hero-image" id="featuredMovie">
+                <div class="loading">Loading featured movie...</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section search-results" id="searchResults">
+        <div class="section-header">
+            <h2>Search Results</h2>
+        </div>
+        <div class="movie-grid" id="searchGrid"></div>
+    </section>
+
+    <section class="section" id="trendingSection">
+        <div class="section-header">
+            <h2>Trending Now</h2>
+        </div>
+        <div class="movie-grid" id="trendingGrid">
+            <div class="loading">Loading trending movies...</div>
+        </div>
+    </section>
+
+    <section class="section" id="topratedSection">
+        <div class="section-header">
+            <h2>Top Rated Movies</h2>
+        </div>
+        <div class="movie-grid" id="topratedGrid">
+            <div class="loading">Loading top rated movies...</div>
+        </div>
+    </section>
+
+    <section class="section" id="upcomingSection">
+        <div class="section-header">
+            <h2>Upcoming Movies</h2>
+        </div>
+        <div class="movie-grid" id="upcomingGrid">
+            <div class="loading">Loading upcoming movies...</div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 IMDb Redesign. Powered by The Movie Database (TMDb) API.</p>
+    </footer>
+
+    <script src="home.js"></script>
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - User Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0f0f0f;
+            color: #fff;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-left h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #f5c518 0%, #ffd700 100%);
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%);
+            color: #f5c518;
+            border: 1px solid #f5c518;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(245,197,24,0.4);
+            background: linear-gradient(135deg, #f5c518 0%, #ffd700 100%);
+            color: #000;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f5c518;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #f5c518 0%, #ffd700 100%);
+            color: #000;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(245,197,24,0.4);
+        }
+
+        .table-container {
+            background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: rgba(245,197,24,0.1);
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #f5c518;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        tbody tr {
+            transition: background 0.3s;
+        }
+
+        tbody tr:hover {
+            background: rgba(245,197,24,0.05);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .error {
+            background: rgba(255,0,0,0.1);
+            border: 1px solid rgba(255,0,0,0.3);
+            color: #ff6b6b;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(245,197,24,0.2);
+            color: #f5c518;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .admin-badge {
+            background: rgba(255,0,0,0.2);
+            color: #ff6b6b;
+        }
+
+        .password-hash {
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .security-info {
+            background: rgba(0,255,100,0.1);
+            border: 1px solid rgba(0,255,100,0.3);
+            color: #4ade80;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .security-info h3 {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .security-info ul {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .security-info li {
+            margin-bottom: 0.3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-section">
+            <div class="header-left">
+                <h1>👨‍💼 Admin Dashboard</h1>
+                <p class="subtitle">User Management & Database Overview</p>
+            </div>
+            <a href="home.html" class="back-btn">
+                <span>←</span> Back to Home
+            </a>
+        </div>
+
+        <div class="security-info">
+            <h3>🔒 Security Status: ACTIVE</h3>
+            <p><strong>Your passwords are already secured!</strong></p>
+            <ul>
+                <li>✅ Passwords are hashed using <strong>bcrypt</strong></li>
+                <li>✅ Original passwords are NOT stored in database</li>
+                <li>✅ Impossible to reverse-engineer passwords</li>
+                <li>✅ Each password has a unique salt</li>
+                <li>✅ JWT tokens for authentication</li>
+            </ul>
+        </div>
+
+        <div id="errorMessage" class="error" style="display: none;"></div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <div class="value" id="totalUsers">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Admin Users</h3>
+                <div class="value" id="adminUsers">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Registered Today</h3>
+                <div class="value" id="todayUsers">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Latest User</h3>
+                <div class="value" id="latestUser" style="font-size: 1.2rem;">-</div>
+            </div>
+        </div>
+
+        <button class="refresh-btn" onclick="loadUsers()">🔄 Refresh Data</button>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Password Hash</th>
+                        <th>Registered</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTable">
+                    <tr>
+                        <td colspan="6" class="loading">Loading users...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+
+        async function loadUsers() {
+            try {
+                const response = await fetch(`${API_URL}/admin/users`);
+                const data = await response.json();
+
+                if (data.success) {
+                    displayUsers(data.users);
+                    updateStats(data.users);
+                    hideError();
+                } else {
+                    showError(data.message || 'Failed to load users');
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+                showError('Failed to connect to server. Make sure Flask backend is running on port 5000.');
+            }
+        }
+
+        function displayUsers(users) {
+            const tbody = document.getElementById('usersTable');
+            
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="loading">No users registered yet</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td><span class="badge">${user.id}</span></td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td><span class="badge ${user.is_admin ? 'admin-badge' : ''}">${user.is_admin ? 'ADMIN' : 'User'}</span></td>
+                    <td><span class="password-hash" title="${user.password}">${user.password}</span></td>
+                    <td>${formatDate(user.created_at)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function updateStats(users) {
+            document.getElementById('totalUsers').textContent = users.length;
+
+            // Count admin users
+            const adminCount = users.filter(user => user.is_admin).length;
+            document.getElementById('adminUsers').textContent = adminCount;
+
+            // Count today's users
+            const today = new Date().toDateString();
+            const todayCount = users.filter(user => 
+                new Date(user.created_at).toDateString() === today
+            ).length;
+            document.getElementById('todayUsers').textContent = todayCount;
+
+            // Latest user
+            if (users.length > 0) {
+                const latest = users[users.length - 1];
+                document.getElementById('latestUser').textContent = latest.name;
+            }
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        // Load users when page loads
+        window.addEventListener('DOMContentLoaded', loadUsers);
+
+        // Auto-refresh every 30 seconds
+        setInterval(loadUsers, 30000);
+    </script>
+</body>
+</html>
