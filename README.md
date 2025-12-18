@@ -81,7 +81,7 @@ Felles kompetanseområder
 - Dokumentasjon: README, planlegging, beskrivelser av systemet.
 - Testing: Teste søkefunksjon, layout, API-kall, innlogging og responsivitet.
 
-Brukerveiledning
+# Brukerveiledning
 
 For å bruke nettsiden ....
 Passord
