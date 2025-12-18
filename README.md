@@ -80,3 +80,23 @@ Felles kompetanseområder
 - Problemløsning: Finne løsninger når API-data mangler, når design må tilpasses, eller når funksjoner feiler.
 - Dokumentasjon: README, planlegging, beskrivelser av systemet.
 - Testing: Teste søkefunksjon, layout, API-kall, innlogging og responsivitet.
+
+Brukerveiledning
+
+For å bruke nettsiden ....
+Passord
+LAG EN .ENV FIL OG KOPIER ALT NEDE
+
+  host= localhost
+  user= my_user
+  password= password
+  database= imdb_redesign
+
+Last ned alle disse pakkene
+
+pip install flask
+pip install flask-cors
+pip install mysql-connector-python
+pip install bcrypt
+pip install pyjwt
+pip install python-dotenv
